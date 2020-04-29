@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AD340 App</string>
+
+    <string name="error_output">ERROR - Please enter a valid zipcode.</string>
 </resources>
