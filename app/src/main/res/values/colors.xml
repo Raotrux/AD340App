@@ -3,4 +3,6 @@
     <color name="colorPrimary">#228B22</color>
     <color name="colorPrimaryDark">#1F3D0C</color>
     <color name="colorAccent">#654321</color>
+
+    <color name="forecast_item_background">#AAAAAA</color>
 </resources>
