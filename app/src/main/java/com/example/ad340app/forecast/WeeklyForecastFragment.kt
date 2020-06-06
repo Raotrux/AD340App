@@ -19,22 +19,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 /**
  * A simple [Fragment] subclass.
  */
-class CurrentForecastFragment : Fragment() {
+class WeeklyForecastFragment : Fragment() {
 
     private val forecastRepository = ForecastRepository()
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
+        val view = inflater.inflate(R.layout.fragment_weekly_forecast, container, false)
         val zipcode = arguments?.getString(KEY_ZIPCODE) ?: ""
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
-        val dailyForecastList: RecyclerView = view.findViewById(R.id.dailyForecastList)
 
+        val dailyForecastList: RecyclerView = view.findViewById(R.id.dailyForecastList)
         dailyForecastList.layoutManager = LinearLayoutManager(requireContext())
         val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) {
             showForecastDetails(it)
@@ -42,35 +43,36 @@ class CurrentForecastFragment : Fragment() {
 
         dailyForecastList.adapter = dailyForecastAdapter
 
-        val weeklyForecastObserver = Observer<List<DailyForecast>> { forecastItems ->
-            dailyForecastAdapter.submitList(forecastItems)
-        }
-        forecastRepository.weeklyForecast.observe(this, weeklyForecastObserver)
 
         val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
         locationEntryButton.setOnClickListener{
             showLocationEntry()
         }
 
+        val weeklyForecastObserver = Observer<List<DailyForecast>> { forecastItems ->
+            dailyForecastAdapter.submitList(forecastItems)
+        }
+        forecastRepository.weeklyForecast.observe(this, weeklyForecastObserver)
+
         forecastRepository.loadForecast(zipcode)
         return view
     }
 
     private fun showLocationEntry() {
-        val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
+        val action = WeeklyForecastFragmentDirections.actionWeeklyForecastFragmentToLocationEntryFragment()
         findNavController().navigate(action)
     }
 
     private fun showForecastDetails(forecast: DailyForecast) {
-        val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToForecastDetailsFragment(forecast.temp, forecast.description)
+        val action = WeeklyForecastFragmentDirections.actionWeeklyForecastFragmentToForecastDetailsFragment(forecast.temp, forecast.description)
         findNavController().navigate(action)
     }
 
     companion object {
         const val KEY_ZIPCODE = "key_zipcode"
 
-        fun newInstance(zipcode: String) : CurrentForecastFragment {
-            val fragment = CurrentForecastFragment()
+        fun newInstance(zipcode: String) : WeeklyForecastFragment {
+            val fragment = WeeklyForecastFragment()
 
             val args = Bundle()
             args.putString(KEY_ZIPCODE, zipcode)
